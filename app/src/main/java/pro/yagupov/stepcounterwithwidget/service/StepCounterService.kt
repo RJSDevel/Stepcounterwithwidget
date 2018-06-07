@@ -13,7 +13,6 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
@@ -69,8 +68,7 @@ class StepCounterService : Service(), SensorEventListener {
             }
 
             val builder = NotificationCompat.Builder(this, "")
-                    .setContentTitle("")
-                    .setContentText("")
+                    .setContentTitle("Шагомер запущен")
                     .setSmallIcon(R.mipmap.ic_launcher)
 
             val stepCounterIntent = Intent(applicationContext, MainActivity::class.java)
@@ -96,13 +94,11 @@ class StepCounterService : Service(), SensorEventListener {
     override fun onTaskRemoved(rootIntent: Intent) {
         Log.e(TAG, "TASK REMOVED")
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            val restartIntent = Intent(this, javaClass)
-            val rpi = PendingIntent.getService(this, 0, restartIntent, PendingIntent.FLAG_ONE_SHOT)
-            val am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            am.setExact(AlarmManager.RTC, System.currentTimeMillis() + 500, rpi)
-            Log.e(TAG, "TRY RESTART")
-        }
+        val restartIntent = Intent(this, javaClass)
+        val rpi = PendingIntent.getService(this, 0, restartIntent, PendingIntent.FLAG_ONE_SHOT)
+        val am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        am.setExact(AlarmManager.RTC, System.currentTimeMillis() + 500, rpi)
+        Log.e(TAG, "TRY RESTART")
     }
 
     override fun onSensorChanged(event: SensorEvent) {
