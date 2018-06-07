@@ -78,8 +78,8 @@ class StepCounterService : Service(), SensorEventListener {
             builder.setContentIntent(resultPendingIntent)
             startForeground(SERVICES_ID, builder.build())
         } catch (e: Exception) {
+            e.printStackTrace()
             stopSelf()
-            return
         }
     }
 
@@ -136,6 +136,7 @@ class StepCounterService : Service(), SensorEventListener {
 
         val steps = repository.getTodaySteps()
         Log.d(TAG, "Today steps - $steps")
+
         sendBroadcast(Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE))
     }
 
